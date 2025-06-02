@@ -21,7 +21,7 @@ class Investimento:
         self.aporte_inicial = aporte_inicial
         self.recorrente = recorrente
         self.total_investido = aporte_inicial
-        self.resgate = 0.0
+        self.resgate = aporte_inicial
 
     def __str__(self):
         return (
@@ -38,8 +38,8 @@ def calcular_rendimentos(investimentos):
 
     for inv in investimentos:
             cdi_mensal = CDI / 100 / 12
-            rendimento = round(inv.total_investido * (inv.percentual / 100) * cdi_mensal,2)
-            inv.resgate =  inv.total_investido + inv.resgate + rendimento
+            rendimento = round(inv.resgate * (inv.percentual / 100) * cdi_mensal,2)
+            inv.resgate +=  rendimento
 
             cifroes = "\t"
             quantidade_de_cifroes = int(inv.resgate // 1000)
@@ -55,6 +55,7 @@ def calcular_rendimentos(investimentos):
                 f"{VERDE}R${inv.resgate:.2f}{RESET}]{VERDE}{cifroes}{RESET}")
             if inv.recorrente:
                 inv.total_investido += inv.aporte_inicial
+                inv.resgate += inv.aporte_inicial
             
     print(f"\n{ITALICO}resumo da simulação em {ROSA}{meses[mes_atual]} de {ano_base}{RESET}")
     mes_atual += 1

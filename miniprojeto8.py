@@ -381,11 +381,36 @@ def criar_graficos(frame,pessoas):
     canvas.get_tk_widget().pack(fill=tk.BOTH, expand=True)
 
 
+pessoas = ler_pessoas() 
+empresas = ler_empresas()
+categorias = ler_categorias() 
+def resetar_simulacao():
+    global meses_simulados
+    meses_simulados = 0
 
+    # Recarrega os dados iniciais dos arquivos
+    novas_pessoas = ler_pessoas()
+    novas_empresas = ler_empresas()
+    novas_categorias = ler_categorias()
+
+    # Atualiza os dados nas estruturas e na interface
+    pessoas.clear()
+    pessoas.extend(novas_pessoas)
+
+    empresas.clear()
+    empresas.extend(novas_empresas)
+
+    categorias.clear()
+    categorias.update(novas_categorias)
+
+    # Atualiza interface
+    popular_treeview_pessoas(interface["tree_pessoas"], pessoas)
+    popular_treeview_empresas(interface["tree_empresas"], empresas)
+    criar_graficos(interface["graficos_frame"], pessoas)
+    interface["meses_label"].config(text=f"Meses simulados: {meses_simulados}")
+    
+    
 def simulador_tkinter():
-    pessoas = ler_pessoas() 
-    empresas = ler_empresas()
-    categorias = ler_categorias() 
     root = tk.Tk()
     root.title("Simulador de Relações de Mercado")
     root.geometry("1400x900")
@@ -418,7 +443,7 @@ def simulador_tkinter():
     btn_simular_1 = ttk.Button(control_frame, text="Simular 1 Mês",command=lambda:simular_mercado(pessoas, empresas, categorias))
     btn_simular_1.pack(side=tk.LEFT, padx=5)
 
-    btn_resetar = ttk.Button(control_frame, text="Resetar")
+    btn_resetar = ttk.Button(control_frame, text="Resetar",command= lambda:resetar_simulacao())
     btn_resetar.pack(side=tk.LEFT, padx=5)
 
     meses_label = ttk.Label(control_frame, text=f"Meses simulados: {meses_simulados}", font=fonte)
